@@ -12,23 +12,26 @@
   },
   "author": "Mike van Rossum <mike@mvr.me>",
   "dependencies": {
-    "mtgox-apiv2": "1.1.x",
-    "lodash": "2.x",
-    "moment": "2.4.x",
+    "async": "0.2.x",
+    "bitfinex": "git+https://github.com/naddison36/bitfinex.git",
+    "bitstamp": "0.1.x",
     "btc-e": "0.0.x",
     "cexio": "0.0.x",
-    "bitstamp": "0.1.x",
-    "bitfinex": "git+https://github.com/naddison36/bitfinex.git",
-    "async": "0.2.x",
-    "nedb": "0.9.4",
+    "kraken-api": "0.1.x",
     "line-reader": "0.2.x",
-    "semver": "2.2.1",
-    "kraken-api" :"0.1.x"
+    "lodash": "2.x",
+    "moment": "2.4.x",
+    "mtgox-apiv2": "1.1.x",
+    "nedb": "0.9.4",
+    "okcoin-api": "^0.1.7",
+    "semver": "2.2.1"
   },
   "devDependencies": {
     "nodeunit": "0.8.2"
   },
-  "engines": { "node": ">=0.10.x" },
+  "engines": {
+    "node": ">=0.10.x"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/askmike/gekko.git"
