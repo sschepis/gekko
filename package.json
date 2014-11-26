@@ -17,14 +17,20 @@
     "bitstamp": "0.1.x",
     "btc-e": "0.0.x",
     "cexio": "0.0.x",
+    "compression": "^1.2.1",
+    "connect": "^3.3.3",
+    "express": "^4.10.4",
     "kraken-api": "0.1.x",
     "line-reader": "0.2.x",
     "lodash": "2.x",
     "moment": "2.4.x",
     "mtgox-apiv2": "1.1.x",
     "nedb": "0.9.4",
+    "nodejs-websocket": "^1.1.0",
     "okcoin-api": "^0.1.7",
-    "semver": "2.2.1"
+    "semver": "2.2.1",
+    "serve-static": "^1.7.1",
+    "websocket": "^1.0.11"
   },
   "devDependencies": {
     "nodeunit": "0.8.2"

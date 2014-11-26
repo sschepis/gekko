@@ -137,6 +137,15 @@ var actors = [
       module: 'redis',
       version: '0.10.0'
     }]
+  },
+  {
+    name: 'Web Server',
+    slug: 'webserver',
+    description: 'A simple web server',
+    async: false,
+    silent: false,
+    modes: ['realtime', 'backtest'],
+    dependencies: []
   }
 ];
 

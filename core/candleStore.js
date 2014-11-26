@@ -82,7 +82,7 @@ Store.prototype.addCandles = function(candles) {
 // If there is a day in open state, append all queued candles to it.
 Store.prototype.flush = function() {
   //TODO(yin): Help, this.day.state can get easily stuck locked.
-  if(this.queue.length > 0 && this.day != null && this.day.state = 'open') {
+  if(this.queue.length > 0 && this.day !== null && this.day.state == 'open') {
     this.day.addCandles(_.flatten(this.queue));
     this.queue = [];
     this.day.state = 'saving';
@@ -143,6 +143,6 @@ Store.prototype.toArray = function(csv, next) {
 }
 
 //TODO(yin):Exported for tests
-Store.Day = Day
+Store.Day = Day;
 
 module.exports = Store;

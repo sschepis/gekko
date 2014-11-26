@@ -276,6 +276,50 @@ var exchanges = [
     // TODO: should be possible to enable this for Bitfinex?
     providesHistory: false
     // fetchTimespan: 60
+  },
+  {
+    name: 'OKCoinFutures',
+    slug: 'okcoinfutures',
+    direct: true,
+    infinityOrder: false,
+    currencies: ['BTC','BTC1W'],
+    assets: ['BTC','LTC','USD','BTC1W','BTC2W','BTC1M','BTC1Q'],
+    markets: [
+      {
+        pair: ['BTC', 'BTC1W'], minimalOrder: { amount: 0.01, unit: 'currency' }
+      },
+      {
+        pair: ['BTC', 'BTC2W'], minimalOrder: { amount: 0.01, unit: 'currency' }
+      },
+      {
+        pair: ['BTC', 'BTC1M'], minimalOrder: { amount: 0.01, unit: 'currency' }
+      },
+      {
+        pair: ['BTC', 'BTC1Q'], minimalOrder: { amount: 0.01, unit: 'currency' }
+      }
+    ],
+    requires: ['key', 'secret'],
+    providesHistory: false,
+    fetchTimespan: 600
+  },
+  {
+    name: 'OKCoin',
+    slug: 'okcoin',
+    direct: true,
+    infinityOrder: false,
+    currencies: ['USD'],
+    assets: ['BTC'],
+    markets: [
+      {
+        pair: ['BTC', 'USD'], minimalOrder: { amount: 0.01, unit: 'currency' }
+      },
+      {
+        pair: ['USD', 'BTC'], minimalOrder: { amount: 0.01, unit: 'currency' }
+      }
+    ],
+    requires: ['key', 'secret'],
+    providesHistory: false,
+    fetchTimespan: 600
   }
 ];
 

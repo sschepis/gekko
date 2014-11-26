@@ -440,7 +440,7 @@ Manager.prototype.checkHistoryAge = function(data) {
 
   // reset available history
   history.available.gap = true;
-  history.available.minutes = 0
+  history.available.minutes = 0;
   history.available.first = false;
   history.toFetch = history.timespan;
 }
@@ -612,7 +612,7 @@ Manager.prototype.processTrades = function(data) {
     log.debug('fetch spans midnight');
 
     // old day
-    batches[0] = this.addEmtpyCandles(_.first(batches), this.mostRecentCandle, MINUTES_IN_DAY);
+    batches[0] = this.addEmptyCandles(_.first(batches), this.mostRecentCandle, MINUTES_IN_DAY);
 
     // new day
 
@@ -620,7 +620,7 @@ Manager.prototype.processTrades = function(data) {
     // after midnight with empty candles reflecting last price
     var ghostCandle = _.clone(_.last(batches[0]));
     ghostCandle.s = -1;
-    batches[1] = this.addEmtpyCandles(_.last(batches), ghostCandle);
+    batches[1] = this.addEmptyCandles(_.last(batches), ghostCandle);
 
     this.leftovers = batches[1].pop();
 
@@ -634,9 +634,9 @@ Manager.prototype.processTrades = function(data) {
     if(this.mostRecentCandle && this.mostRecentCandle.s === MINUTES_IN_DAY) {
       var ghostCandle = _.clone(this.mostRecentCandle);
       ghostCandle.s = -1;
-      var batch = this.addEmtpyCandles(candles, ghostCandle);
+      var batch = this.addEmptyCandles(candles, ghostCandle);
     } else
-      var batch = this.addEmtpyCandles(candles, this.mostRecentCandle);
+      var batch = this.addEmptyCandles(candles, this.mostRecentCandle);
 
     this.leftovers = batch.pop();
 
@@ -756,10 +756,10 @@ Manager.prototype.splitCandleDays = function(candles) {
 // add empty candles. End is a minute # since midnight.
 //
 // for example:
-//    addEmtpyCandles(candles, 0, MINUTES_IN_DAY)
+//    addEmptyCandles(candles, 0, MINUTES_IN_DAY)
 // would return an array of candles from:
 //     [midnight up to][batch without gaps][up to next midnight - 1]
-Manager.prototype.addEmtpyCandles = function(candles, start, end) {
+Manager.prototype.addEmptyCandles = function(candles, start, end) {
   var length = _.size(candles);
   if(!length)
     return candles;
