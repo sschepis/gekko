@@ -112,8 +112,7 @@ config.custom = {
 // watched by config.watch
 config.trader = {
   enabled: false,
-  key: '2017890',
-  secret: 'F127DA6608874605E57EBCA2677DB379',
+
   username: '' // your username, only fill in when using bitstamp or cexio
 };
 
@@ -140,7 +139,7 @@ config.mailer = {
   enabled: false,       // Send Emails if true, false to turn off
   sendMailOnStart: true,    // Send 'Gekko starting' message if true, not if false
   email: 'sschepis@gmail.com',    // Your Gmail address
-  password: 'RamA1o8!',       // Your Gmail Password - if not supplied Gekko will prompt on startup.
+
   tag: '[GEKKO] ',
   server: 'smtp.gmail.com',   // The name of YOUR outbound (SMTP) mail server.
   smtpauth: true,     // Does SMTP server require authentication (true for Gmail)

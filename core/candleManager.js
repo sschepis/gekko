@@ -427,7 +427,7 @@ Manager.prototype.checkHistoryAge = function(data) {
   if(history.available.last.minute === MINUTES_IN_DAY)
     this.increaseDay();
 
-  this.minumum = history.available.last.m.clone().add('m', 1);
+  this.minumum = history.available.last.m.clone().add('m', 10); // SFS increased max to 10 from 1
 
   if(this.minumum > this.fetch.start.m)
     // we're all good, process normally

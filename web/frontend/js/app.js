@@ -8,7 +8,10 @@ $(document).ready(function() {
       { type: 'main', size: 400, resizable: true },
       { type: 'right', size: 400, resizable: true },
       { type: 'preview', size: 300, resizable: true }
-    ]
+    ],
+      onResize: function(event) {
+       $('#output').height( $('#tab-content').height()-$('#otoolbar').height()-10);
+      }
   });
   w2ui['myLayout'].content('main', $('#mainContent').html());
   $('#mainContent').html('');
@@ -41,9 +44,12 @@ $(document).ready(function() {
       { type: 'button',  id: 'item7',  caption: 'Save', icon: 'fa fa-save' },
       { type: 'button',  id: 'item8',  caption: 'Reset', icon: 'fa fa-undo' },
       { type: 'break', id: 'break3' },
+      { type: 'button',  id: 'item9',  caption: 'Configure Server', icon: 'fa fa-note' },
       { type: 'button',  id: 'item9',  caption: 'Restart Server', icon: 'fa fa-eraser' }
     ]
   });
+
+
   var setupEditor = function() {
     // setup main editor window
     ui.editor = ace.edit("editor");
@@ -56,12 +62,35 @@ $(document).ready(function() {
     // setup tabs
     $('#tabs').w2tabs({
       name: 'tabs',
-      active: 'tab_output',
+      active: 'tab_console',
       tabs: [
         { id: 'tab_output', caption: 'Output' },
-        { id: 'tab_console', caption: 'Console' }
+        { id: 'tab_console', caption: 'Console' },
+        { id: 'tab_advice', caption: 'Advice' },
+        { id: 'tab_simulator', caption: 'Simulator' },
+        { id: 'tab_trades', caption: 'Live Trader' }
       ],
       onClick: function (event) {
+        switch(event.target) {
+          case 'tab_output':
+            showOutputTab();
+            break;
+          case 'tab_console':
+            showConsoleTab();
+            break;
+          case 'tab_advice':
+            showAdviceTab();
+            break;
+          case 'tab_simulator':
+            showSimulatorTab();
+          case 'tab_trades':
+            showTradesTab();
+            break;
+          default:
+            break;
+        }
+      },
+      onClose: function (event) {
         if(ui.destroyableComponents.length > 0) {
           for(var i=0;i<ui.destroyableComponents.length;i++) {
             var c = ui.destroyableComponents[i];
@@ -69,23 +98,33 @@ $(document).ready(function() {
           }
           ui.destroyableComponents = [];
         }
-        if(event.target == 'tab_output') {
-          showOutputTab();
-        }
-        else if (event.target == 'tab_console') {
-          showConsoleTab();
+        if(event.target === 'tab_console')  {
+          if(ui.consolelog) {
+            console.log = ui.consolelog;
+            delete ui.consolelog;
+            delete ui.output;
+          }
         }
       }
     });
-    showOutputTab();
+  };
+
+  var setOutputLog = function(term) {
+    if(!ui.consolelog) {
+      ui.consolelog = console.log;
+      console.log = function(out) {
+        if(ui.output) {
+          ui.output.setValue(ui.output.getValue() + "\n" + out);
+          ui.output.alignCursors();
+          ui.output.clearSelection();
+        }
+        else if(ui.consolelog) ui.consolelog(out);
+      };
+    }
   };
 
   var showOutputTab = function() {
-    if(ui.consolelog) {
-      console.log = ui.consolelog;
-      delete ui.consolelog;
-    }
-    $('#tab-content').html('<div id="otoolbar"></div><div id="output"></div>');
+    $('#tab-content').html('<div><div id="otoolbar"></div><div id="output"></div></div>');
     // setup output  editor window
     ui.output = ace.edit("output");
     ui.output.setTheme("ace/theme/xcode");
@@ -99,6 +138,8 @@ $(document).ready(function() {
       ]
     });
     ui.destroyableComponents.push(w2ui.output);
+    setOutputLog(ui.output);
+    //$('#output').height( $('#tab-content').height()-$('#otoolbar').height()-10);
   };
 
   var setupRightPanel  = function() {
@@ -124,13 +165,8 @@ $(document).ready(function() {
     });
   };
 
+
   var showConsoleTab = function() {
-    if(!ui.consolelog) {
-      ui.consolelog = console.log;
-      console.log = function(out) {
-        ui.term.echo(out);
-      };
-    }
     $('#tab-content').html('<div id="console"></div>');
     $('#console').terminal(function(command, term) {
       ui.term = term;
@@ -146,17 +182,70 @@ $(document).ready(function() {
       } else {
         ui.term.echo('');
       }
-    }, {
-      greetings: 'Console',
+    },
+    {
+      greetings: 'BitBot v0.1',
       name: 'consoleTerminal',
       height: 200,
-      prompt: '> ' }
-    );
+      prompt: '$ ',
+      outputLimit: 500
+    });
   };
 
+  var showAdviceTab = function() {
+    var adviceGrid = {
+        name: 'advice',
+        header: 'Advice',
+        show: {
+        header: true,
+        footer: true
+      },
+        style: 'padding: 0px',
+        columns: [
+        { field: 'recid', caption: "id", size: '100px' },
+        { field: 'title', caption: "text", size: '100%' }
+      ]
+    };
+  };
+
+  var showTradesTab = function() {
+
+  };
+
+  var showSimulatorTab = function() {
+
+  };
+
+  var setupSocketClient = function() {
+    var socket = io();
+    var error = function(o) { return console.log('error: received invalid message from server:' + JSON.stringify(o, null, 4)); };
+    socket.on('__data', function(msg) {
+      if(!(msg.message && msg.data) )
+        return error(msg);
+      switch(msg.message) {
+        case 'welcome':
+          console.log('connected to socket server. ' + msg.message);
+          break;
+        case 'advice':
+          console.log('received new trading advice:' + JSON.stringify(msg.data, null, 4));
+          break;
+        case 'candle':
+          console.log('received new candle:' + JSON.stringify(msg.data, null, 4));
+          break;
+        case 'trade':
+          console.log('received new trade:' + JSON.stringify(msg.data, null, 4));
+          break;
+        default:
+          return;
+      }
+    });
+  };
 
   setupEditor();
   setupTabs();
   setupRightPanel();
+  setupSocketClient();
+  showOutputTab();
+
 
 });

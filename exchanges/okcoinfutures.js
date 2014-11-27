@@ -131,7 +131,8 @@ Trader.prototype.getTrades = function(since, callback, descending) {
           type: arg.type
         });
       });
-      callback(null, trades);
+      if(_.isFunction(callback)) callback(null, trades);
+      else return trades;
     }
     else return self.retry(self.getTrades, args);
   };
